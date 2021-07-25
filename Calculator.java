@@ -123,7 +123,10 @@ public class Calculator extends javax.swing.JFrame{
 		mas       .setBounds(5+225,405,65,40);
 		pantalla  .setBounds(5,5, 290, 140);
 		
-		pantalla.setText("000");
+		pantalla.setFont(new java.awt.Font("Calculator", 1, 70));
+		pantalla.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+		pantalla.setEditable(false);
+		pantalla.setText("0000000");
 		
 		
 		this.add(mcr);
@@ -131,33 +134,26 @@ public class Calculator extends javax.swing.JFrame{
 		this.add(mmas);
 		this.add(raiz);
 		this.add(off);
-		
 		this.add(ac);
 		this.add(c);
 		this.add(masmenos);
 		this.add(porcentaje);
-		
 		this.add(b7);
 		this.add(b8);
 		this.add(b9);
 		this.add(entre);
-		
-		
 		this.add(b4);
 		this.add(b5);
 		this.add(b6);
 		this.add(por);
-		
 		this.add(b1);
 		this.add(b2);
 		this.add(b3);
 		this.add(menos);
-		
 		this.add(b0);
 		this.add(punto);
 		this.add(igual);
 		this.add(mas);
-		
 		this.add(pantalla);
 	}
 	
