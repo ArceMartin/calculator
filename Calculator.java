@@ -110,6 +110,8 @@ public class Calculator extends javax.swing.JFrame{
 		menos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
 		igual.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){equalsButtonActionPerformed(evt);}});
 		off.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){offButtonActionPerformed(evt);}});
+		ac.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){borraTodo(evt);}});
+		c.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){borraPantalla(evt);}});
 	
 		
 		pantalla.setFont(new java.awt.Font("Calculator", 1, 70));
@@ -264,11 +266,52 @@ public class Calculator extends javax.swing.JFrame{
 		}
 		pendingOp = false;
 		newOp = true;
-		System.out.println("pila = "+pila);
+		System.out.println("pila = " + pila);
 	}
 	
 	private void offButtonActionPerformed(java.awt.event.ActionEvent evt){
 		System.exit(0);
+	}
+	
+	private void borraTodo(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		if(pendingOp){
+			try{
+				Integer.parseInt(tope);
+				pila.pop();
+			} catch ( NumberFormatException e ){}
+			pila.pop();
+			pila.pop();
+			// pila.push("0");
+			// pantalla.setText("0");
+			// pendingOp = false;
+		}
+		else{
+			pila.pop();
+			// pila.push("0");
+			// pantalla.setText("0");
+		}
+		pila.push("0");
+		pantalla.setText("0");
+		pendingOp = false;
+		
+		System.out.println("pila = " + pila);
+	}
+	
+	private void borraPantalla(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		int valor;
+		
+		try{
+			valor = Integer.parseInt(tope);
+			pila.pop();
+			// pila.push("0");
+			// pantalla.setText("0");
+		}catch ( NumberFormatException e ){}
+		pila.push("0");
+		pantalla.setText("0");
+		
+		System.out.println("pila = " + pila);
 	}
 	
 	public static void main(String[] argv) {
