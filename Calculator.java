@@ -6,6 +6,7 @@ public class Calculator extends javax.swing.JFrame{
 		pantalla.setText("0");
 		pila.push("0");
 		pendingOp = false;
+		newOp = true;
 	}
 	
 	private void initComponents(){
@@ -158,27 +159,31 @@ public class Calculator extends javax.swing.JFrame{
 		
 		try{
 			valor = Integer.parseInt(tope);
+			pila.pop();
+			if (newOp) throw new NumberFormatException();
+			
 			valor *= 10;
 			valor += presionado;
-			pila.pop();
-			pila.push(""+valor);
+			pila.push("" + valor);
 		}
 		catch ( NumberFormatException e ){
 			pila.push(""+presionado);
 		}
 		
-		System.out.println("pila = "+pila);
+		newOp = false;
 		pantalla.setText(pila.peek());
+		System.out.println("pila = "+pila);
 	}
 	
 	private void operationButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
 		char presionado = evt.paramString().charAt(21);
 		int valor;
-		pendingOp = true;
 		
 		try{
 			valor = Integer.parseInt(tope);
+			equalsButtonActionPerformed(evt);
+			pendingOp = true;
 			pila.push("" + presionado);
 		}
 		catch ( NumberFormatException e ){
@@ -232,7 +237,7 @@ public class Calculator extends javax.swing.JFrame{
 				pila.push(tope);
 			}
 			
-		}
+		} 
 		catch ( NumberFormatException e ){
 			valor1 = Integer.parseInt(pila.pop());
 			switch (tope) {
@@ -258,6 +263,7 @@ public class Calculator extends javax.swing.JFrame{
 			}
 		}
 		pendingOp = false;
+		newOp = true;
 		System.out.println("pila = "+pila);
 	}
 	
@@ -272,5 +278,5 @@ public class Calculator extends javax.swing.JFrame{
 	private javax.swing.JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, ac, c, masmenos, porcentaje, entre, por, menos, mas, mcr, mmenos, mmas, raiz, off, punto, igual;
 	private javax.swing.JTextField pantalla;
 	private java.util.Stack<String> pila;
-	private boolean pendingOp;
+	private boolean pendingOp, newOp;
 }
