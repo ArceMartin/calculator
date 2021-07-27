@@ -109,9 +109,11 @@ public class Calculator extends javax.swing.JFrame{
 		por.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
 		menos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
 		igual.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){equalsButtonActionPerformed(evt);}});
+		
 		off.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){offButtonActionPerformed(evt);}});
-		ac.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){borraTodo(evt);}});
-		c.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){borraPantalla(evt);}});
+		ac.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){acButtonActionPerformed(evt);}});
+		c.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){cButtonActionPerformed(evt);}});
+		masmenos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){masmenosButtonActionPerformed(evt);}});
 	
 		
 		pantalla.setFont(new java.awt.Font("Calculator", 1, 70));
@@ -273,7 +275,7 @@ public class Calculator extends javax.swing.JFrame{
 		System.exit(0);
 	}
 	
-	private void borraTodo(java.awt.event.ActionEvent evt){
+	private void acButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
 		if(pendingOp){
 			try{
@@ -298,7 +300,7 @@ public class Calculator extends javax.swing.JFrame{
 		System.out.println("pila = " + pila);
 	}
 	
-	private void borraPantalla(java.awt.event.ActionEvent evt){
+	private void cButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
 		int valor;
 		
@@ -310,6 +312,20 @@ public class Calculator extends javax.swing.JFrame{
 		}catch ( NumberFormatException e ){}
 		pila.push("0");
 		pantalla.setText("0");
+		
+		System.out.println("pila = " + pila);
+	}
+	
+	private void masmenosButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		int valor;
+		try{
+			valor = Integer.parseInt(tope);
+			valor *= (-1);
+			pila.pop();
+			pila.push(""+valor);
+			pantalla.setText(""+valor);
+		}catch( NumberFormatException e ){}
 		
 		System.out.println("pila = " + pila);
 	}
