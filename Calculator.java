@@ -1,39 +1,14 @@
-import java.awt.Color;
-import javax.swing.ImageIcon;
-
 public class Calculator extends javax.swing.JFrame{
-	// ------------------------------ ATRIBUTOS ---------------------------------
-	
-	private javax.swing.JButton b0;
-	private javax.swing.JButton b1;
-	private javax.swing.JButton b2;
-	private javax.swing.JButton b3;
-	private javax.swing.JButton b4;
-	private javax.swing.JButton b5;
-	private javax.swing.JButton b6;
-	private javax.swing.JButton b7;
-	private javax.swing.JButton b8;
-	private javax.swing.JButton b9;
-	private javax.swing.JButton ac;
-	private javax.swing.JButton c;
-	private javax.swing.JButton masmenos;
-	private javax.swing.JButton porcentaje;
-	private javax.swing.JButton entre;
-	private javax.swing.JButton por;
-	private javax.swing.JButton menos;
-	private javax.swing.JButton mas;
-	private javax.swing.JButton mcr;
-	private javax.swing.JButton mmenos;
-	private javax.swing.JButton mmas;
-	private javax.swing.JButton raiz;
-	private javax.swing.JButton off;
-	private javax.swing.JButton punto;
-	private javax.swing.JButton igual;
-	private javax.swing.JTextField pantalla;
-	
-	// ---------------------------- CONSTRUCTOR -------------------------------
 	
 	public Calculator(){
+		initComponents();
+		pila = new java.util.Stack<String>();
+		pantalla.setText("0");
+		pila.push("0");
+		pendingOp = false;
+	}
+	
+	private void initComponents(){
 		b0         = new javax.swing.JButton();
 		b1         = new javax.swing.JButton();
 		b2         = new javax.swing.JButton();
@@ -61,14 +36,8 @@ public class Calculator extends javax.swing.JFrame{
 		off        = new javax.swing.JButton();
 		pantalla   = new javax.swing.JTextField();
 		
-		this.setTitle("Calculadora");
-		this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		this.setLayout(null);
-		this.setResizable(false);
-		this.setSize(314, 457+31);
-		this.setVisible(true);
-		this.setIconImage((new ImageIcon("calc_ico.png")).getImage());
-		this.getContentPane().setBackground(Color.GRAY);
+		setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+		setTitle("Calculadora");
 		
 		mcr       .setText("mcr");
 		mmenos    .setText("m-");
@@ -123,46 +92,185 @@ public class Calculator extends javax.swing.JFrame{
 		mas       .setBounds(5+225,405,65,40);
 		pantalla  .setBounds(5,5, 290, 140);
 		
+		b0.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b1.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b2.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b3.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b4.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b5.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b6.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b7.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b8.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b9.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		
+		mas.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
+		entre.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
+		por.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
+		menos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
+		igual.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){equalsButtonActionPerformed(evt);}});
+		off.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){offButtonActionPerformed(evt);}});
+	
+		
 		pantalla.setFont(new java.awt.Font("Calculator", 1, 70));
 		pantalla.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 		pantalla.setEditable(false);
-		pantalla.setText("0000000");
+		// pantalla.setText("0000000");
+				
+		setLayout(null);
+		setResizable(false);
+		setSize(314, 457+31);
+		setVisible(true);
+		setIconImage((new javax.swing.ImageIcon("calc_ico.png")).getImage());
+		getContentPane().setBackground(java.awt.Color.GRAY);
 		
-		
-		this.add(mcr);
-		this.add(mmenos);
-		this.add(mmas);
-		this.add(raiz);
-		this.add(off);
-		this.add(ac);
-		this.add(c);
-		this.add(masmenos);
-		this.add(porcentaje);
-		this.add(b7);
-		this.add(b8);
-		this.add(b9);
-		this.add(entre);
-		this.add(b4);
-		this.add(b5);
-		this.add(b6);
-		this.add(por);
-		this.add(b1);
-		this.add(b2);
-		this.add(b3);
-		this.add(menos);
-		this.add(b0);
-		this.add(punto);
-		this.add(igual);
-		this.add(mas);
-		this.add(pantalla);
+		add(mcr);
+		add(mmenos);
+		add(mmas);
+		add(raiz);
+		add(off);
+		add(ac);
+		add(c);
+		add(masmenos);
+		add(porcentaje);
+		add(b7);
+		add(b8);
+		add(b9);
+		add(entre);
+		add(b4);
+		add(b5);
+		add(b6);
+		add(por);
+		add(b1);
+		add(b2);
+		add(b3);
+		add(menos);
+		add(b0);
+		add(punto);
+		add(igual);
+		add(mas);
+		add(pantalla);
 	}
 	
-	// -------------------------- MÉTODOS ESTATICOS -----------------------------
-	/*
-	 * Método main
-	 * @param argv son los argumentos de consola
-	 */
+	private void numButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		int presionado = Integer.parseInt(""+evt.paramString().charAt(21));
+		int valor;
+		
+		try{
+			valor = Integer.parseInt(tope);
+			valor *= 10;
+			valor += presionado;
+			pila.pop();
+			pila.push(""+valor);
+		}
+		catch ( NumberFormatException e ){
+			pila.push(""+presionado);
+		}
+		
+		System.out.println("pila = "+pila);
+		pantalla.setText(pila.peek());
+	}
+	
+	private void operationButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		char presionado = evt.paramString().charAt(21);
+		int valor;
+		pendingOp = true;
+		
+		try{
+			valor = Integer.parseInt(tope);
+			pila.push("" + presionado);
+		}
+		catch ( NumberFormatException e ){
+			pila.pop();
+			pila.push("" + presionado);
+		}
+		
+		System.out.println("pila = "+pila);
+	}
+	
+	private void equalsButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.pop();
+		int valor1, valor2;
+		String op;
+		
+		try{
+			valor2 = Integer.parseInt(tope);
+			if ( pendingOp ){
+				op = pila.pop();
+				valor1 = Integer.parseInt(pila.pop());
+				switch(op){
+					case "+":
+						valor1 += valor2;
+						pila.push("" + valor1);
+						pantalla.setText("" + valor1);
+						break;
+					case "-":
+						valor1 -= valor2;
+						pila.push("" + valor1);
+						pantalla.setText("" + valor1);
+						break;
+					case "X":
+						valor1 *= valor2;
+						pila.push("" + valor1);
+						pantalla.setText("" + valor1);
+						break;
+					case "/":
+						if(valor2!=0){
+							valor1 = valor1/valor2;
+							pila.push("" + valor1);
+							pantalla.setText("" + valor1);
+						}
+						else{
+							pantalla.setText("ERROR");
+							pila.push("0");
+						}
+						break;
+				}
+			}
+			else{
+				pila.push(tope);
+			}
+			
+		}
+		catch ( NumberFormatException e ){
+			valor1 = Integer.parseInt(pila.pop());
+			switch (tope) {
+				case "+":
+					valor1 += valor1;
+					pila.push(""+valor1);
+					pantalla.setText(""+valor1);
+					break;
+				case "-":
+					valor1 = (-1)*valor1;
+					pila.push(""+valor1);
+					pantalla.setText(""+valor1);
+					break;
+				case "X":
+					valor1 *= valor1;
+					pila.push(""+valor1);
+					pantalla.setText(""+valor1);
+					break;
+				case "/":
+					pila.push("1");
+					pantalla.setText("1");
+					break;
+			}
+		}
+		pendingOp = false;
+		System.out.println("pila = "+pila);
+	}
+	
+	private void offButtonActionPerformed(java.awt.event.ActionEvent evt){
+		System.exit(0);
+	}
+	
 	public static void main(String[] argv) {
 		new Calculator();
 	}
+	
+	private javax.swing.JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, ac, c, masmenos, porcentaje, entre, por, menos, mas, mcr, mmenos, mmas, raiz, off, punto, igual;
+	private javax.swing.JTextField pantalla;
+	private java.util.Stack<String> pila;
+	private boolean pendingOp;
 }
