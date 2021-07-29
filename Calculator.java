@@ -6,7 +6,7 @@ public class Calculator extends javax.swing.JFrame{
 		pantalla.setText("0");
 		pila.push("0");
 		pendingOp = false;
-		newOp = true;
+		newOp = false;
 		memory = 0;
 		
 		info();
@@ -59,7 +59,7 @@ public class Calculator extends javax.swing.JFrame{
 		b7        .setText("7");
 		b8        .setText("8");
 		b9        .setText("9");
-		entre     .setText("/");
+		entre     .setText("\u00F7");
 		b4        .setText("4");
 		b5        .setText("5");
 		b6        .setText("6");
@@ -136,6 +136,7 @@ public class Calculator extends javax.swing.JFrame{
 		b7.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
 		b8.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
 		b9.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		punto.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){puntoButtonActionPerformed(evt);}});
 		
 		mrc.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){mrcButtonActionPerformed(evt);}});
 		mmenos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){mmenosButtonActionPerformed(evt);}});
@@ -196,34 +197,54 @@ public class Calculator extends javax.swing.JFrame{
 	private void numButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
 		int presionado = Integer.parseInt(""+evt.paramString().charAt(21));
-		int valor;
+		int valorInt;
+		// float valorFloat;
 		
-		try{
-			valor = Integer.parseInt(tope);
+		if (newOp) {
+			// System.out.println("NUMBUTTONACTIONPERFORMED: [ALPHA]");
 			pila.pop();
-			if (newOp) throw new NumberFormatException();
-			
-			valor *= 10;
-			valor += presionado;
-			pila.push("" + valor);
-		}
-		catch ( NumberFormatException e ){
 			pila.push(""+presionado);
+			pantalla.setText(pila.peek());
+		}
+		else if( tope.contains(".")){
+			// System.out.println("NUMBUTTONACTIONPERFORMED: [BETA]");
+			pila.pop();
+			pila.push(tope + presionado);
+			pantalla.setText(tope + presionado);
+		}
+		else{
+			// System.out.println("NUMBUTTONACTIONPERFORMED: [GAMMA]");
+			try{
+				// System.out.println("NUMBUTTONACTIONPERFORMED: [DELTA]");
+				valorInt = Integer.parseInt(tope);
+				pila.pop();
+				
+				valorInt *= 10;
+				valorInt += presionado;
+				pila.push("" + valorInt);
+				pantalla.setText("" + valorInt);
+			}
+			catch ( NumberFormatException e ){
+				// System.out.println("NUMBUTTONACTIONPERFORMED: [EPSILON]");
+				pila.push("" + presionado);
+				pantalla.setText("" + presionado);
+			}
 		}
 		
 		newOp = false;
-		pantalla.setText(pila.peek());
 		info();
 	}
 	
 	private void operationButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
 		char presionado = evt.paramString().charAt(21);
-		int valor;
+		float valor;
 		
 		try{
-			valor = Integer.parseInt(tope);
-			equalsButtonActionPerformed(evt);
+			valor = Float.parseFloat(tope);
+			if(pendingOp){
+				equalsButtonActionPerformed(evt);
+			}
 			pendingOp = true;
 			pila.push("" + presionado);
 		}
@@ -232,40 +253,42 @@ public class Calculator extends javax.swing.JFrame{
 			pila.push("" + presionado);
 		}
 		
+		newOp = false;
 		info();
 	}
 	
 	private void equalsButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.pop();
-		int valor1, valor2;
+		float valor1, valor2;
 		String op;
 		
 		try{
-			valor2 = Integer.parseInt(tope);
+			valor2 = Float.parseFloat(tope);
 			if ( pendingOp ){
 				op = pila.pop();
-				valor1 = Integer.parseInt(pila.pop());
+				valor1 = Float.parseFloat(pila.pop());
 				switch(op){
 					case "+":
 						valor1 += valor2;
 						pila.push("" + valor1);
-						pantalla.setText("" + valor1);
+					String ss = sf(valor1); 
+						pantalla.setText(ss);
 						break;
 					case "-":
 						valor1 -= valor2;
 						pila.push("" + valor1);
-						pantalla.setText("" + valor1);
+						pantalla.setText(sf(valor1));
 						break;
 					case "\u00D7":
 						valor1 *= valor2;
 						pila.push("" + valor1);
-						pantalla.setText("" + valor1);
+						pantalla.setText(sf(valor1));
 						break;
-					case "/":
+					case "\u00F7":
 						if(valor2!=0){
 							valor1 = valor1/valor2;
 							pila.push("" + valor1);
-							pantalla.setText("" + valor1);
+							pantalla.setText(sf(valor1));
 						}
 						else{
 							pantalla.setText("ERROR");
@@ -280,24 +303,25 @@ public class Calculator extends javax.swing.JFrame{
 			
 		} 
 		catch ( NumberFormatException e ){
-			valor1 = Integer.parseInt(pila.pop());
+			System.out.println(e);
+			valor1 = Float.parseFloat(pila.pop());
 			switch (tope) {
 				case "+":
 					valor1 += valor1;
 					pila.push(""+valor1);
-					pantalla.setText(""+valor1);
+					pantalla.setText(sf(valor1));
 					break;
 				case "-":
 					valor1 = (-1)*valor1;
 					pila.push(""+valor1);
-					pantalla.setText(""+valor1);
+					pantalla.setText(sf(valor1));
 					break;
 				case "\u00D7":
 					valor1 *= valor1;
 					pila.push(""+valor1);
-					pantalla.setText(""+valor1);
+					pantalla.setText(sf(valor1));
 					break;
-				case "/":
+				case "\u00F7":
 					pila.push("1");
 					pantalla.setText("1");
 					break;
@@ -321,14 +345,9 @@ public class Calculator extends javax.swing.JFrame{
 			} catch ( NumberFormatException e ){}
 			pila.pop();
 			pila.pop();
-			// pila.push("0");
-			// pantalla.setText("0");
-			// pendingOp = false;
 		}
 		else{
 			pila.pop();
-			// pila.push("0");
-			// pantalla.setText("0");
 		}
 		pila.push("0");
 		pantalla.setText("0");
@@ -339,13 +358,11 @@ public class Calculator extends javax.swing.JFrame{
 	
 	private void cButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
-		int valor;
+		float valor;
 		
 		try{
-			valor = Integer.parseInt(tope);
+			valor = Float.parseFloat(tope);
 			pila.pop();
-			// pila.push("0");
-			// pantalla.setText("0");
 		}catch ( NumberFormatException e ){}
 		pila.push("0");
 		pantalla.setText("0");
@@ -355,13 +372,14 @@ public class Calculator extends javax.swing.JFrame{
 	
 	private void masmenosButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
-		int valor;
+		float valor;
 		try{
-			valor = Integer.parseInt(tope);
+			valor = Float.parseFloat(tope);
+			if(valor==0)throw new NumberFormatException();
 			valor *= (-1);
 			pila.pop();
 			pila.push(""+valor);
-			pantalla.setText(""+valor);
+			pantalla.setText(sf(valor));
 		}catch( NumberFormatException e ){}
 		
 		info();
@@ -369,29 +387,29 @@ public class Calculator extends javax.swing.JFrame{
 	
 	private void mrcButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
-		int valor;
+		float valor;
 		
 		try{
-			valor = Integer.parseInt(tope);
+			valor = Float.parseFloat(tope);
 			pila.pop();
 		}catch( NumberFormatException e ){}
 		
 		pila.push(""+memory);
-		pantalla.setText("" + memory);
+		pantalla.setText(sf(memory));
 		
 		info();
 	}
 	
 	private void mmasButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
-		int valor;
+		float valor;
 		
 		try{
-			valor = Integer.parseInt(tope);
+			valor = Float.parseFloat(tope);
 			memory += valor;
 		}catch( NumberFormatException e ){
 			pila.pop();
-			valor = Integer.parseInt(pila.peek());
+			valor = Float.parseFloat(pila.peek());
 			memory+= valor;
 			pila.push(tope);
 		}
@@ -401,14 +419,14 @@ public class Calculator extends javax.swing.JFrame{
 	
 	private void mmenosButtonActionPerformed(java.awt.event.ActionEvent evt){
 		String tope = pila.peek();
-		int valor;
+		float valor;
 		
 		try{
-			valor = Integer.parseInt(tope);
+			valor = Float.parseFloat(tope);
 			memory -= valor;
 		}catch( NumberFormatException e ){
 			pila.pop();
-			valor = Integer.parseInt(pila.peek());
+			valor = Float.parseFloat(pila.peek());
 			memory-= valor;
 			pila.push(tope);
 		}
@@ -416,8 +434,41 @@ public class Calculator extends javax.swing.JFrame{
 		info();
 	}
 	
+	private void puntoButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		int valor;
+		
+		try{
+			valor = Integer.parseInt(tope);
+			pila.pop();
+			pila.push(tope+".");
+			pantalla.setText(tope+".");
+		}catch(NumberFormatException e){
+			pila.push("0.");
+			pantalla.setText("0.");
+			newOp = false;
+		}
+		
+		info();
+	}
+	
 	private void info(){
-		System.out.println("pila = " + pila + "\t\tmemory = " + memory);
+		System.out.println("pila = " + pila + "\tmemory = " + memory + "\tpendingOp = " + pendingOp + "\tnewOp = " + newOp);
+	}
+	
+	private String sf(float f){
+		String s = "" + f;
+		if(f==Math.floor(f)){
+			s = s.substring(0,s.indexOf("."));
+			return s;
+		}
+		else{
+			try{
+				s = s.substring(0, s.indexOf(".") + 3);
+			}
+			catch( StringIndexOutOfBoundsException e ){}
+		}
+		return s;
 	}
 	
 	public static void main(String[] argv) {
@@ -428,5 +479,5 @@ public class Calculator extends javax.swing.JFrame{
 	private javax.swing.JTextField pantalla;
 	private java.util.Stack<String> pila;
 	private boolean pendingOp, newOp;
-	private int memory;
+	private float memory;
 }
