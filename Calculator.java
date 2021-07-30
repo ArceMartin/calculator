@@ -147,7 +147,7 @@ public class Calculator extends javax.swing.JFrame{
 		ac.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){acButtonActionPerformed(evt);}});
 		c.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){cButtonActionPerformed(evt);}});
 		masmenos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){masmenosButtonActionPerformed(evt);}});
-		//porcentaje
+		porcentaje.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){porcentajeButtonActionPerformed(evt);}});
 		
 		entre.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
 		por.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){operationButtonActionPerformed(evt);}});
@@ -185,23 +185,7 @@ public class Calculator extends javax.swing.JFrame{
 		add(igual);
 		add(mas);
 		add(pantalla);
-		
-		// class CustomKeyListener implements java.awt.event.KeyListener {
-		// 	public void keyPressed(java.awt.event.KeyEvent e){
-		// 		System.out.println(e);
-		// 		char c = e.getKeyChar();
-		// 		int n = Integer.parseInt(""+c);
-		// 		System.out.println("n = "+n);
-		// 		if(0 <= n && n <= 9){ numButtonActionPerformed(n); }
-		// 	}
-		// 	public void keyReleased(java.awt.event.KeyEvent e){}
-			
-		// 	@Override
-		// 	public void keyTyped(java.awt.event.KeyEvent e){}
-		// }
-		// CustomKeyListener ckl = new CustomKeyListener();
-		// addKeyListener(ckl);
-		
+
 		setLayout(null);
 		setFocusable(true);
 		setResizable(false);
@@ -486,6 +470,24 @@ public class Calculator extends javax.swing.JFrame{
 		pila.push("" + valor);
 		pantalla.setText(sf(valor));
 		
+		info();
+	}
+	
+	private void porcentajeButtonActionPerformed(java.awt.event.ActionEvent ect){
+		String tope = pila.peek(), op;
+		float valor2, valor1;
+		try{
+			valor2 = Float.parseFloat(tope);
+			if(pendingOp){
+				pila.pop();
+				op = pila.pop();
+				valor1 = Float.parseFloat(pila.peek());
+				valor2 = valor1*(valor2/100);
+				pila.push(op);
+				pila.push("" + valor2);
+				equalsButtonActionPerformed(ect);
+			}
+		}catch( NumberFormatException e ){
 		info();
 	}
 	
