@@ -126,22 +126,22 @@ public class Calculator extends javax.swing.JFrame{
 		mas       .setBounds(5+225,405,65,40);
 		pantalla  .setBounds(5,5, 290, 140);
 		
-		b0.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b1.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b2.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b3.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b4.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b5.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b6.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b7.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b8.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
-		b9.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(evt);}});
+		b0.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(0);}});
+		b1.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(1);}});
+		b2.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(2);}});
+		b3.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(3);}});
+		b4.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(4);}});
+		b5.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(5);}});
+		b6.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(6);}});
+		b7.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(7);}});
+		b8.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(8);}});
+		b9.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){numButtonActionPerformed(9);}});
 		punto.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){puntoButtonActionPerformed(evt);}});
 		
 		mrc.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){mrcButtonActionPerformed(evt);}});
 		mmenos.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){mmenosButtonActionPerformed(evt);}});
 		mmas.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){mmasButtonActionPerformed(evt);}});
-		//raiz
+		raiz.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){raizButtonActionPerformed(evt);}});
 		off.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){offButtonActionPerformed(evt);}});
 		
 		ac.addActionListener(new java.awt.event.ActionListener(){public void actionPerformed(java.awt.event.ActionEvent evt){acButtonActionPerformed(evt);}});
@@ -186,7 +186,24 @@ public class Calculator extends javax.swing.JFrame{
 		add(mas);
 		add(pantalla);
 		
+		// class CustomKeyListener implements java.awt.event.KeyListener {
+		// 	public void keyPressed(java.awt.event.KeyEvent e){
+		// 		System.out.println(e);
+		// 		char c = e.getKeyChar();
+		// 		int n = Integer.parseInt(""+c);
+		// 		System.out.println("n = "+n);
+		// 		if(0 <= n && n <= 9){ numButtonActionPerformed(n); }
+		// 	}
+		// 	public void keyReleased(java.awt.event.KeyEvent e){}
+			
+		// 	@Override
+		// 	public void keyTyped(java.awt.event.KeyEvent e){}
+		// }
+		// CustomKeyListener ckl = new CustomKeyListener();
+		// addKeyListener(ckl);
+		
 		setLayout(null);
+		setFocusable(true);
 		setResizable(false);
 		setSize(314, 457+31);
 		setVisible(true);
@@ -194,9 +211,9 @@ public class Calculator extends javax.swing.JFrame{
 		getContentPane().setBackground(java.awt.Color.GRAY);
 	}
 	
-	private void numButtonActionPerformed(java.awt.event.ActionEvent evt){
+	private void numButtonActionPerformed(int presionado){
 		String tope = pila.peek();
-		int presionado = Integer.parseInt(""+evt.paramString().charAt(21));
+		// int presionado = Integer.parseInt(""+evt.paramString().charAt(21));
 		int valorInt;
 		// float valorFloat;
 		
@@ -303,7 +320,7 @@ public class Calculator extends javax.swing.JFrame{
 			
 		} 
 		catch ( NumberFormatException e ){
-			System.out.println(e);
+			// System.out.println(e);
 			valor1 = Float.parseFloat(pila.pop());
 			switch (tope) {
 				case "+":
@@ -448,6 +465,26 @@ public class Calculator extends javax.swing.JFrame{
 			pantalla.setText("0.");
 			newOp = false;
 		}
+		
+		info();
+	}
+	
+	private void raizButtonActionPerformed(java.awt.event.ActionEvent evt){
+		String tope = pila.peek();
+		float valor;
+		
+		try{
+			valor = Float.parseFloat(tope);
+			valor = Float.parseFloat(""+Math.sqrt(Double.parseDouble(""+valor)));
+			pila.pop();
+		}catch( NumberFormatException e ){
+			pila.pop();
+			valor = Float.parseFloat(pila.peek());
+			valor = Float.parseFloat(""+Math.sqrt(Double.parseDouble(""+valor)));
+			pila.push(tope);
+		}
+		pila.push("" + valor);
+		pantalla.setText(sf(valor));
 		
 		info();
 	}
