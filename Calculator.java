@@ -489,6 +489,7 @@ public class Calculator extends javax.swing.JFrame{
 			}
 		}catch( NumberFormatException e ){
 		info();
+		}
 	}
 	
 	private void info(){
